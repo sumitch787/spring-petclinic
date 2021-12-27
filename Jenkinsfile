@@ -9,7 +9,8 @@ pipeline {
     stage('build') {
       steps {
         sh '''pwd
-mvn clean package'''
+cd  ${env.WORKSPACE}
+mvn -v'''
       }
     }
 
