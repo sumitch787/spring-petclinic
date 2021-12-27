@@ -1,9 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'jenkins-mvn'
+    }
+
+  }
   stages {
-    stage('') {
+    stage('checkout') {
       steps {
-        podTemplate(name: 'kuber', namespace: 'jenkins', serviceAccount: 'jenkins', showRawYaml: true)
+        sh 'pwd'
       }
     }
 
