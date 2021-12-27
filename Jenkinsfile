@@ -6,9 +6,10 @@ pipeline {
 
   }
   stages {
-    stage('checkout') {
+    stage('build') {
       steps {
-        sh 'pwd'
+        sh '''pwd
+mvn clean package'''
       }
     }
 
