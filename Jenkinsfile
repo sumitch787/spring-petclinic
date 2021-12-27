@@ -10,8 +10,16 @@ pipeline {
       steps {
         container(name: 'jenkins-mvn') {
           sh '''pwd 
-cd $WORKSPACE
-ls -al'''
+cd $WORKSPACE'''
+        }
+
+      }
+    }
+
+    stage('Build') {
+      steps {
+        container(name: 'jenkins-mvn') {
+          sh 'mvn clean package'
         }
 
       }
