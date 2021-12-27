@@ -6,11 +6,10 @@ pipeline {
 
   }
   stages {
-    stage('build') {
+    stage('Build') {
       steps {
-        sh '''pwd \\
-cd  $WORKSPACE \\
-mvn -v'''
+        dir(path: '$WORKSPACE')
+        sh 'ls -al'
       }
     }
 
