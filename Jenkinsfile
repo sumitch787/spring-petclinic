@@ -25,6 +25,25 @@ cd $WORKSPACE'''
       }
     }
 
+    stage('Testing') {
+      steps {
+        container(name: 'jenkins-mvn') {
+          sh 'mvn clean verify'
+          sh 'mvn test'
+        }
+
+      }
+    }
+
+    stage('Report') {
+      steps {
+        container(name: 'jenkins-mvn') {
+          jacoco(sourcePattern: '**/target/site/jacoco')
+        }
+
+      }
+    }
+
   }
   environment {
     jenkins = 'maven'
