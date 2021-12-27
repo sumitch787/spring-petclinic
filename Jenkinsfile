@@ -9,7 +9,7 @@ pipeline {
     stage('build') {
       steps {
         sh '''pwd \\
-cd  ${env.WORKSPACE} \\
+cd  $WORKSPACE \\
 mvn -v'''
       }
     }
