@@ -7,10 +7,28 @@ pipeline {
   }
   stages {
     stage('Build') {
-      steps {
-        sh '''#!/bin/bash
+      parallel {
+        stage('Build') {
+          steps {
+            sh '''#!/bin/bash
 cd $WORKSPACE
-ls -al'''
+
+'''
+          }
+        }
+
+        stage('Checking Maven Version') {
+          steps {
+            sh 'mvn -v'
+          }
+        }
+
+        stage('Clean Package') {
+          steps {
+            sh 'mvn clean package'
+          }
+        }
+
       }
     }
 
