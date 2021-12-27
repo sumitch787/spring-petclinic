@@ -8,8 +8,9 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        dir(path: '$WORKSPACE')
-        sh 'ls -al'
+        sh '''#!/bin/bash
+cd $WORKSPACE
+ls -al'''
       }
     }
 
