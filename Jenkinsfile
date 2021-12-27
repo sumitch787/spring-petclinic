@@ -36,9 +36,23 @@ cd $WORKSPACE'''
     }
 
     stage('Report') {
-      steps {
-        container(name: 'jenkins-mvn') {
-          jacoco(sourcePattern: '**/target/site/jacoco')
+      parallel {
+        stage('Report') {
+          steps {
+            container(name: 'jenkins-mvn') {
+              jacoco(sourcePattern: '**/target/site/jacoco', execPattern: '**/target/*.exec', buildOverBuild: true, changeBuildStatus: true)
+            }
+
+          }
+        }
+
+        stage('') {
+          steps {
+            container(name: 'jenkins-mvn') {
+              archiveArtifacts '**/target/*.jar'
+            }
+
+          }
         }
 
       }
