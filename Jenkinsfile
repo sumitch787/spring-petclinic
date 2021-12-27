@@ -6,9 +6,12 @@ pipeline {
 
   }
   stages {
-    stage('Build') {
+    stage('Checkout') {
       steps {
-        container(name: 'jenkins-mvn', shell: 'mvn -v')
+        container(name: 'jenkins-mvn') {
+          sh 'mvn -v'
+        }
+
       }
     }
 
