@@ -33,4 +33,7 @@ cd $WORKSPACE
     }
 
   }
+  environment {
+    jenkins = 'maven'
+  }
 }
