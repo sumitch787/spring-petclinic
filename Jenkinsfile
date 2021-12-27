@@ -7,28 +7,8 @@ pipeline {
   }
   stages {
     stage('Build') {
-      parallel {
-        stage('Build') {
-          steps {
-            sh '''#!/bin/bash
-cd $WORKSPACE
-
-'''
-          }
-        }
-
-        stage('Checking Maven Version') {
-          steps {
-            sh 'mvn -v'
-          }
-        }
-
-        stage('Clean Package') {
-          steps {
-            sh 'mvn clean package'
-          }
-        }
-
+      steps {
+        container(name: 'jenkins-mvn', shell: 'mvn -v')
       }
     }
 
