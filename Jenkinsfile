@@ -8,8 +8,8 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh '''pwd
-cd  ${env.WORKSPACE}
+        sh '''pwd \\
+cd  ${env.WORKSPACE} \\
 mvn -v'''
       }
     }
