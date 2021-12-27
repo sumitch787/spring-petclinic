@@ -46,7 +46,7 @@ cd $WORKSPACE'''
           }
         }
 
-        stage('') {
+        stage('Archive Artifact') {
           steps {
             container(name: 'jenkins-mvn') {
               archiveArtifacts '**/target/*.jar'
