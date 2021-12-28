@@ -21,8 +21,7 @@ pipeline {
       steps {
         container(name: 'jenkins-mvn') {
           withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
-            sh '''mvn test $SONAR_MAVEN_GOAL -Dsonar.host.url=$SONAR_HOST_URL \\ 
--Dsonar.login=$SONAR_AUTH_TOKEN'''
+            sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
           }
 
         }
