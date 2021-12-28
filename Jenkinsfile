@@ -9,7 +9,7 @@ pipeline {
     stage('Checkout') {
       steps {
         container(name: 'jenkins-mvn') {
-          dir(path: '${env.WORKSPACE}')
+          sh 'cd $WORKSPACE'
         }
 
       }
