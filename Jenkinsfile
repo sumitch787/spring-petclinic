@@ -16,14 +16,36 @@ cd $WORKSPACE'''
       }
     }
 
-    stage('test') {
-      steps {
-        container(name: 'jenkins-mvn') {
-          withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
-            sh 'echo ${SONAR_HOST_URL}'
-            sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
-          }
+    stage('Build') {
+      parallel {
+        stage('Test') {
+          steps {
+            container(name: 'jenkins-mvn') {
+              withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
+                sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
+              }
 
+            }
+
+          }
+        }
+
+        stage('build') {
+          steps {
+            container(name: 'jenkins-mvn') {
+              sh 'mvn package'
+            }
+
+          }
+        }
+
+        stage('Clean') {
+          steps {
+            container(name: 'jenkins-mvn') {
+              sh 'mvn clean'
+            }
+
+          }
         }
 
       }
