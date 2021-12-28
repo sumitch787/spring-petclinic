@@ -35,7 +35,7 @@ pipeline {
         stage('Test') {
           steps {
             container(name: 'jenkins-mvn') {
-              sh 'mvn clean verify test'
+              sh 'mvn verify'
             }
 
           }
