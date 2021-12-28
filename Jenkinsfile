@@ -18,22 +18,38 @@ cd $WORKSPACE'''
 
     stage('Build') {
       parallel {
-        stage('Build') {
+        stage('test') {
           steps {
             container(name: 'jenkins-mvn') {
-              sh 'mvn clean package'
+              sh 'mvn clean verify test'
+              withSonarQubeEnv(installationName: 'maven', envOnly: true) {
+                sh '''$SONAR_MAVEN_GOAL -debug
+echo $maven'''
+              }
+
             }
 
           }
         }
 
-        stage('Test') {
+        stage('Build') {
           steps {
             container(name: 'jenkins-mvn') {
-              sh 'mvn clean test'
+              sh 'mvn clean package compile'
             }
 
           }
+        }
+
+      }
+    }
+
+    stage('Reports') {
+      steps {
+        container(name: 'jenkins-mvn') {
+          junit '**/target/surefire-reports/*.html'
+          jacoco(buildOverBuild: true, changeBuildStatus: true, execPattern: '**/target/*.exec', sourcePattern: '**/target/site/jacoco-aggregate/*')
+          findBuildScans()
         }
 
       }
