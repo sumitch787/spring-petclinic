@@ -41,6 +41,7 @@ cd $WORKSPACE'''
           steps {
             container(name: 'jenkins-mvn') {
               jacoco(sourcePattern: '**/target/site/jacoco', execPattern: '**/target/*.exec', buildOverBuild: true, changeBuildStatus: true)
+              sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=maven '
             }
 
           }
