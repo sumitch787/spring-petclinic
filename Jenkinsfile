@@ -39,10 +39,10 @@ cd $WORKSPACE'''
       steps {
         container(name: 'jenkins-mvn') {
           jacoco(sourcePattern: '**/target/site/jacoco', execPattern: '**/target/*.exec', buildOverBuild: true, changeBuildStatus: true)
-        }
+          withSonarQubeEnv('maven') {
+            sh 'mvn clean verify $maven'
+          }
 
-        withSonarQubeEnv('maven') {
-          sh 'mvn clean verify $maven'
         }
 
       }
