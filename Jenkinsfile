@@ -46,7 +46,7 @@ pipeline {
     stage('Report') {
       steps {
         container(name: 'jenkins-mvn') {
-          junit '**/target/surefire-reports/*.html'
+          junit '**/target/site/jacoco-aggregate/*.html'
           jacoco(buildOverBuild: true, changeBuildStatus: true, execPattern: '**/target/*.exec', sourcePattern: '**/target/site/jacoco-aggregate/*')
         }
 
