@@ -48,7 +48,6 @@ pipeline {
     stage('Report') {
       steps {
         container(name: 'jenkins-mvn') {
-          junit '**/target/site/*.html'
           jacoco(buildOverBuild: true, changeBuildStatus: true, execPattern: '**/target/*.exec', sourcePattern: '**/target/site/jacoco-aggregate/*')
         }
 
