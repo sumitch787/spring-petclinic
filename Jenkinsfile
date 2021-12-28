@@ -13,6 +13,7 @@ pipeline {
           sh 'mvn clean'
           sh 'mvn compile'
           sh 'mvn install'
+          sh 'mvn verify'
         }
 
       }
@@ -27,15 +28,6 @@ pipeline {
                 sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
               }
 
-            }
-
-          }
-        }
-
-        stage('Test') {
-          steps {
-            container(name: 'jenkins-mvn') {
-              sh 'mvn verify'
             }
 
           }
