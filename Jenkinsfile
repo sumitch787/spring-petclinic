@@ -36,24 +36,13 @@ cd $WORKSPACE'''
     }
 
     stage('Report') {
-      parallel {
-        stage('Report') {
-          steps {
-            container(name: 'jenkins-mvn') {
-              jacoco(sourcePattern: '**/target/site/jacoco', execPattern: '**/target/*.exec', buildOverBuild: true, changeBuildStatus: true)
-              sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=maven '
-            }
-
-          }
+      steps {
+        container(name: 'jenkins-mvn') {
+          jacoco(sourcePattern: '**/target/site/jacoco', execPattern: '**/target/*.exec', buildOverBuild: true, changeBuildStatus: true)
         }
 
-        stage('Archive Artifact') {
-          steps {
-            container(name: 'jenkins-mvn') {
-              archiveArtifacts '**/target/*.jar'
-            }
-
-          }
+        withSonarQubeEnv('maven') {
+          sh 'mvn clean verify $maven'
         }
 
       }
