@@ -6,59 +6,44 @@ pipeline {
 
   }
   stages {
-    stage('Checkout') {
+    stage('Build') {
       steps {
         container(name: 'jenkins-mvn') {
           sh 'cd $WORKSPACE'
+          sh 'mvn clean'
+          sh 'mvn package'
         }
 
       }
     }
 
-    stage('Build') {
-      parallel {
-        stage('Test') {
-          steps {
-            container(name: 'jenkins-mvn') {
-              withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
-                sh '"env"'
-                sh '''mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL \\ 
--Dsonar.login=$SONAR_AUTH_TOKEN \\
--Dsonar.projectKey=$SONAR_PROJECT_KEY'''
-              }
-
-            }
-
+    stage('Test & Analysis') {
+      steps {
+        container(name: 'jenkins-mvn') {
+          withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
+            sh '''mvn test $SONAR_MAVEN_GOAL -Dsonar.host.url=$SONAR_HOST_URL \\ 
+-Dsonar.login=$SONAR_AUTH_TOKEN'''
           }
-        }
 
-        stage('build') {
-          steps {
-            container(name: 'jenkins-mvn') {
-              sh 'mvn package'
-            }
-
-          }
-        }
-
-        stage('Clean') {
-          steps {
-            container(name: 'jenkins-mvn') {
-              sh 'mvn clean'
-            }
-
-          }
         }
 
       }
     }
 
-    stage('Reports') {
+    stage('Report') {
       steps {
         container(name: 'jenkins-mvn') {
           junit '**/target/surefire-reports/*.html'
           jacoco(buildOverBuild: true, changeBuildStatus: true, execPattern: '**/target/*.exec', sourcePattern: '**/target/site/jacoco-aggregate/*')
-          findBuildScans()
+        }
+
+      }
+    }
+
+    stage('Artifact') {
+      steps {
+        container(name: 'jenkins-mvn') {
+          archiveArtifacts '**/target/*.jar'
         }
 
       }
