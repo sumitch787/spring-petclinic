@@ -21,7 +21,6 @@ cd $WORKSPACE'''
         stage('test') {
           steps {
             container(name: 'jenkins-mvn') {
-              sh 'mvn clean verify test'
               withSonarQubeEnv(installationName: 'maven', envOnly: true) {
                 sh '''$SONAR_MAVEN_GOAL -debug
 echo $maven'''
