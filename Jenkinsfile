@@ -21,10 +21,13 @@ cd $WORKSPACE'''
         stage('test') {
           steps {
             container(name: 'jenkins-mvn') {
-              withSonarQubeEnv(installationName: 'maven', envOnly: true)
+              withSonarQubeEnv(installationName: 'maven', envOnly: true) {
+                sh 'echo ${SONAR_HOST_URL}'
+              }
+
+              sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
 
-            sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
           }
         }
 
