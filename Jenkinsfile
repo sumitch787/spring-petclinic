@@ -9,8 +9,7 @@ pipeline {
     stage('Checkout') {
       steps {
         container(name: 'jenkins-mvn') {
-          sh '''pwd 
-cd $WORKSPACE'''
+          dir(path: '$WORKSPACE')
         }
 
       }
@@ -22,7 +21,10 @@ cd $WORKSPACE'''
           steps {
             container(name: 'jenkins-mvn') {
               withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
-                sh 'mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
+                sh '"env"'
+                sh '''mvn test sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL \\ 
+-Dsonar.login=$SONAR_AUTH_TOKEN \\
+-Dsonar.projectKey=$SONAR_PROJECT_KEY'''
               }
 
             }
