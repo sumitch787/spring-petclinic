@@ -29,6 +29,7 @@
     <node.version>v8.11.1</node.version>
     <nohttp-checkstyle.version>0.0.4.RELEASE</nohttp-checkstyle.version>
     <spring-format.version>0.0.27</spring-format.version>
+    <aggregate.report.dir>/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 
   </properties>
 
@@ -203,9 +204,9 @@
           </execution>
           <execution>
             <id>report</id>
-            <phase>prepare-package</phase>
+            <phase>verify</phase>
             <goals>
-              <goal>report</goal>
+              <goal>report-aggregate</goal>
             </goals>
           </execution>
         </executions>
@@ -233,7 +234,28 @@
           <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
         </configuration>
       </plugin>
-
+      <plugin>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.7</version>
+      </plugin>
+       <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <outputDirectory>${basedir}/target/surefire-reports</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>during-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report-only</goal>
+                        </goals>
+                    </execution>
+                </executions>
+          </plugin>
     </plugins>
   </build>
 
