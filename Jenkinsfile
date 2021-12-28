@@ -11,7 +11,8 @@ pipeline {
         container(name: 'jenkins-mvn') {
           sh 'cd $WORKSPACE'
           sh 'mvn clean'
-          sh 'mvn package'
+          sh 'mvn compile'
+          sh 'mvn install'
         }
 
       }
@@ -19,7 +20,7 @@ pipeline {
 
     stage('Test & Analysis') {
       parallel {
-        stage('Test & Analysis') {
+        stage('sonar') {
           steps {
             container(name: 'jenkins-mvn') {
               withSonarQubeEnv(installationName: 'sonar', envOnly: true, credentialsId: 'sonar') {
@@ -40,13 +41,22 @@ pipeline {
           }
         }
 
+        stage('checkstyle') {
+          steps {
+            container(name: 'jenkins-mvn') {
+              sh 'mvn checkstyle:checkstyle'
+            }
+
+          }
+        }
+
       }
     }
 
     stage('Report') {
       steps {
         container(name: 'jenkins-mvn') {
-          junit '**/target/site/jacoco-aggregate/*.html'
+          junit '**/target/site/*.html'
           jacoco(buildOverBuild: true, changeBuildStatus: true, execPattern: '**/target/*.exec', sourcePattern: '**/target/site/jacoco-aggregate/*')
         }
 
